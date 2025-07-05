@@ -1,7 +1,11 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UserRegisterRequestDto } from './dto/request/user.register.request.dto';
-import { UserResponseDto } from './dto/response/user.response.dto';
+import {
+  UserResponseDto,
+  UserResponseData,
+} from './dto/response/user.response.dto';
+import { plainToInstance } from 'class-transformer';
 
 @Controller('user')
 export class UserController {
@@ -13,6 +17,13 @@ export class UserController {
   ): Promise<UserResponseDto> {
     const user = await this.userService.registerUser(userRegisterDto);
 
-    return { message: 'User registered successfully', user };
+    const transformedUser = plainToInstance(UserResponseData, user, {
+      excludeExtraneousValues: true,
+    });
+
+    return {
+      message: 'User registered successfully',
+      user: transformedUser,
+    };
   }
 }
