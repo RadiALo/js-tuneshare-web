@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { User } from '@prisma/client';
-import { UserRegisterDto } from './dto/user.register.dto';
+import { UserRegisterRequestDto } from './dto/request/user.register.request.dto';
 import * as bcrypt from 'bcrypt';
 import { UserRepository } from './user.repository';
 
@@ -16,7 +16,7 @@ export class UserService {
     return await this.userRepository.getUserByEmail(email);
   }
 
-  async registerUser(dto: UserRegisterDto) {
+  async registerUser(dto: UserRegisterRequestDto): Promise<User> {
     const existing = await this.getUserByEmail(dto.email);
 
     if (existing) {
